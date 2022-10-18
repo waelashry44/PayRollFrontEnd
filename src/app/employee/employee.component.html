@@ -1,0 +1,138 @@
+<div class="container">  
+    
+    <form [formGroup]="EmpForm" (ngSubmit)="Save()">  
+        
+        <h3>Employee Form</h3>  
+        <div class="row">  
+             
+        <table class="table">  
+        <tr>  
+          <td>Full Name</td>  
+          <td>  
+            <input type="hidden" formControlName="employeeId">  
+            <input type="text" formControlName="fullName">  
+            <div *ngIf="submitted && EmpForm.controls.fullName.errors" class="text-danger">  
+              <div *ngIf="EmpForm.controls.fullName.errors.required">Full Name is required</div>  
+            </div>   
+          </td>  
+        </tr>  
+          
+        <tr>  
+          <td>Identifier Number</td>  
+          <td><input type="text" formControlName="identifierNumber" OnlyNumber="true" [minLength]="10" maxlength="10">  
+            <div *ngIf="submitted && EmpForm.controls.identifierNumber.errors" class="text-danger">  
+              <div *ngIf="EmpForm.controls.identifierNumber.errors.required">Identifier Number is required</div>  
+            </div>   
+          </td>  
+        </tr>  
+        <tr>  
+          <td>Home Address</td>  
+          <td>  
+            <input type="text" formControlName="homeAddress">  
+          </td>  
+        </tr>  
+        <tr>  
+          <td>Birth Date</td>  
+          <td>  
+            <input type="datetime-local" formControlName="birthDate">  
+            <div *ngIf="submitted && EmpForm.controls.birthDate.errors" class="text-danger">  
+              <div *ngIf="EmpForm.controls.birthDate.errors.required">Birth Date is required</div>  
+            </div>  
+              
+          </td>  
+        </tr>  
+        <tr>  
+          <td>Join Date</td>  
+          <td>  
+            <input type="datetime-local" formControlName="joinDate">
+          </td>  
+        </tr>  
+        <tr>  
+          <td>End Date</td>  
+          <td>  
+            <input type="datetime-local" formControlName="endDate">  
+          </td>  
+        </tr>  
+        <tr>
+          <td>Department</td> 
+          <td>
+            <div class="d-grid">
+              <select class="custom-select mb-3" (change)="changeDepartment($event)" formControlName="departmentId">
+                <option value="">Choose Department</option>
+                <option *ngFor="let department of Departments" [ngValue]="department.id">
+                  {{ department.name }}
+                </option>
+              </select>
+              <div *ngIf="submitted && EmpForm.controls.departmentId.errors" class="text-danger">  
+                <div *ngIf="EmpForm.controls.departmentId.errors.required">department is required</div>  
+              </div>  
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Job Position</td> 
+          <td>
+            <div class="d-grid">
+              <select class="custom-select mb-3" (change)="changePosition($event)" formControlName="jobPositionId">
+                <option value="">Choose Position</option>
+                <option *ngFor="let position of Positions" [ngValue]="position.id">
+                  {{ position.name }}
+                </option>
+              </select>
+              <div *ngIf="submitted && EmpForm.controls.jobPositionId.errors" class="text-danger">  
+                <div *ngIf="EmpForm.controls.jobPositionId.errors.required">job position is required</div>  
+              </div>  
+            </div>
+          </td>
+        </tr>
+        <tr>  
+      
+          <td colspan="2">  
+            <button type="submit" class="btn btn-primary text-black">{{EventValue}}</button>  
+          </td>  
+        </tr>  
+          
+      </table>  
+      </div>  
+         
+     <div class="row">  
+      <table class="table table-striped">  
+        <tr>  
+          <td>EmployeeId</td>  
+          <td>FullName</td>       
+          <td>IdentifierNumber</td>  
+          <td>HomeAddress</td>  
+          <td>BirthDate</td>
+          <td>departmentName</td>  
+          <td>positionName</td>  
+          <td>Edit</td>  
+          <td>Delete</td>  
+        </tr>  
+      
+        <tr *ngFor="let d of data">  
+          <td>{{d.employeeId}}</td>  
+          <td>{{d.fullName}}</td>     
+          <td>{{d.identifierNumber}}</td>  
+          <td>{{d.homeAddress}}</td>  
+          <td>{{d.birthDate}}</td>  
+          <td>{{d.departmentName?.name}}</td>  
+          <td>{{d.positionName?.name}}</td>  
+          <td><a (click)="EditData(d)" class="btn btn-warning">Edit</a></td>  
+          <td><a (click)="deleteData(d.employeeId)" class="btn btn-danger text-black">Delete</a></td>    
+        </tr>  
+      </table>  
+    </div>  
+    </form>  
+      
+    </div>  
+  
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+    
+    <!-- <div class="container">
+      <div class="row">
+        <div class="col text-center">
+          <button  mat-raised-button color="primary" (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </div> -->
