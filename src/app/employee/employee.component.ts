@@ -46,6 +46,7 @@ export class EmployeeComponent implements OnInit {
       dependents :this.fb.array([]), 
       salaryDetails :this.fb.array([]), 
     });   
+    
   }  
   getdata() {  
     this.EmployeeService.getData()
