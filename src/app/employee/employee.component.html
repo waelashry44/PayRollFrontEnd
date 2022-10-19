@@ -19,7 +19,8 @@
           
         <tr>  
           <td>Identifier Number</td>  
-          <td><input type="text" formControlName="identifierNumber" OnlyNumber="true" [minLength]="10" maxlength="10">  
+          <td><input type="text" formControlName="identifierNumber" [minLength]="10" maxlength="10"
+             oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
             <div *ngIf="submitted && EmpForm.controls.identifierNumber.errors" class="text-danger">  
               <div *ngIf="EmpForm.controls.identifierNumber.errors.required">Identifier Number is required</div>  
             </div>   
@@ -86,9 +87,40 @@
             </div>
           </td>
         </tr>
+        <!-- <tr>
+          <td colspan="12">
+            <button type="button" (click)="addAttachment()">Add Attachment</button>
+            <div formArrayName="employeeAttachments" *ngIf="employeeAttachments.length > 0">
+              <h2>EmployeeAttachments: </h2>            
+              <div *ngFor="let attachment of employeeAttachments.controls; let i=index">
+                <div formGroupName="{{i}}">
+                <td>
+                   //for="attachment-{{issueDate}}"
+                <label>IssueDate:</label>
+                <input type="text" [formControlName]="issueDate">
+                </td>
+                <td>
+                <label>ExpiryDate:</label>
+                <input type="text" [formControlName]="expiryDate">
+              </td>
+             <td>
+                  <input type="file" #file placeholder="Choose file" (change)="uploadFile($event,i)" style="display:none;">
+                  <button type="button" class="btn btn-success" (click)="file.click()">Upload File</button>
+             </td>
+             <td>
+              <span class="upload">{{showFileName}}</span>            
+             </td>
+             <td>       
+              <button type="button" (click)="deleteAttachment(i)">X</button>
+             </td>
+            </div>
+              </div>
+            </div>
+          </td>
+        </tr> -->
         <tr>  
       
-          <td colspan="2">  
+          <td>  
             <button type="submit" class="btn btn-primary text-black">{{EventValue}}</button>  
           </td>  
         </tr>  

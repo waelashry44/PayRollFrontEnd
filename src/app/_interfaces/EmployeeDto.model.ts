@@ -24,8 +24,11 @@ export interface Dependent
 
 export interface EmployeeAttachment
 {
-    documentNo: number;
+   // documentNo: number;
     file: string;
+    issueDate : Date;
+    expiryDate : Date;
+    fileName: string;
 }
 
 export interface SalaryDetail
