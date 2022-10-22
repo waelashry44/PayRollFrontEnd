@@ -87,37 +87,34 @@
             </div>
           </td>
         </tr>
-        <!-- <tr>
+         <tr>
           <td colspan="12">
             <button type="button" (click)="addAttachment()">Add Attachment</button>
             <div formArrayName="employeeAttachments" *ngIf="employeeAttachments.length > 0">
               <h2>EmployeeAttachments: </h2>            
               <div *ngFor="let attachment of employeeAttachments.controls; let i=index">
-                <div formGroupName="{{i}}">
                 <td>
-                   //for="attachment-{{issueDate}}"
                 <label>IssueDate:</label>
-                <input type="text" [formControlName]="issueDate">
+                <input type="text" [formControlName]="issueDate" id="{{'issueDate'+i}}">
                 </td>
                 <td>
                 <label>ExpiryDate:</label>
-                <input type="text" [formControlName]="expiryDate">
+                <input type="text" [formControlName]="expiryDate" id="{{'expiryDate'+i}}">
               </td>
              <td>
-                  <input type="file" #file placeholder="Choose file" (change)="uploadFile($event,i)" style="display:none;">
+                  <input type="file" [formControlName]="file" #file placeholder="Choose file" (change)="uploadFile($event,i)" style="display:none;">
                   <button type="button" class="btn btn-success" (click)="file.click()">Upload File</button>
-             </td>
+             </td> 
              <td>
-              <span class="upload">{{showFileName}}</span>            
+              <span class="upload" [formControlName]="fileName">{{showFileName}}</span>            
              </td>
              <td>       
               <button type="button" (click)="deleteAttachment(i)">X</button>
              </td>
-            </div>
               </div>
             </div>
           </td>
-        </tr> -->
+        </tr>
         <tr>  
       
           <td>  
@@ -148,8 +145,8 @@
           <td>{{d.identifierNumber}}</td>  
           <td>{{d.homeAddress}}</td>  
           <td>{{d.birthDate}}</td>  
-          <td>{{d.departmentName?.name}}</td>  
-          <td>{{d.positionName?.name}}</td>  
+          <td>{{d.departmentName}}</td>  
+          <td>{{d.positionName}}</td>  
           <td><a (click)="EditData(d)" class="btn btn-warning">Edit</a></td>  
           <td><a (click)="deleteData(d.employeeId)" class="btn btn-danger text-black">Delete</a></td>    
         </tr>  

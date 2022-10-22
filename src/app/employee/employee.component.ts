@@ -18,9 +18,7 @@ export class EmployeeComponent implements OnInit {
   errorMessage: any;
   showError: boolean;
   showFileName: string;
-  base64Output : string;
   disableIdentifierEdit: boolean;
-     
   constructor(private EmployeeService: EmployeeService, private router: Router, 
     private LookupService: LookupService, private fb:FormBuilder) { }  
   data: any;  
@@ -33,8 +31,8 @@ export class EmployeeComponent implements OnInit {
   ngOnInit(): void { 
     this.getdepartments();
     this.getpositions();
-    this.getdata(); 
-    
+    this.getdata();
+     
     this.EmpForm = this.fb.group({  
       employeeId: [null],  
       fullName: ['', Validators.required],        
@@ -46,11 +44,13 @@ export class EmployeeComponent implements OnInit {
       jobStatusId: [null],  
       departmentId : [0], 
       jobPositionId : [0], 
-      employeeAttachments : this.fb.array([]),
+      employeeAttachments : this.fb.array([
+        this.newAttachment()
+      ]),
       dependents :this.fb.array([]), 
       salaryDetails :this.fb.array([]), 
     });   
-    
+
   }    
 
   getdata() {  
@@ -58,10 +58,6 @@ export class EmployeeComponent implements OnInit {
     .subscribe({
       next: (res:any) => {
         this.data = res;
-        for (let i = 0; i < this.data.length; i++) {
-          this.data[i].departmentName = this.Departments!.find((x: { id: number; }) => x.id === this.data[i].departmentId); 
-          this.data[i].positionName = this.Positions!.find((x: { id: number; }) => x.id === this.data[i].jobPositionId); 
-        }
     },
     error: (err: HttpErrorResponse) => {
       debugger;
@@ -105,7 +101,7 @@ export class EmployeeComponent implements OnInit {
       }
       
       let stringToSplit =  this.EmpForm.value.jobPositionId ;
-      this.EmpForm.value.jobPositionId = stringToSplit.split(" ")[1];
+      this.EmpForm.value.jobPositionId =  stringToSplit.split(" ")[1];
       this.EmployeeService.postData(this.EmpForm.value).subscribe((data: any) => { 
         debugger; 
         this.data = data;  
@@ -188,8 +184,8 @@ export class EmployeeComponent implements OnInit {
     this.EmpForm.controls["jobPositionId"].setValue(e.target.value, {
       onlySelf: true,
     });
-    let stringToSplit =  e.target.value;
-    this.EmpForm.value.jobPositionId = stringToSplit.split(" ")[1];
+    // let stringToSplit =  e.target.value;
+    // this.EmpForm.value.jobPositionId = stringToSplit.split(" ")[1];
   }
 
   //get values
@@ -206,24 +202,27 @@ export class EmployeeComponent implements OnInit {
     return this.EmpForm.get('employeeAttachments') as FormArray;
   }
 
-  private newAttachment(): FormGroup {
+  private newAttachment() : FormGroup {
     return this.fb.group({
-      documentNo: [null],
-      issueDate: [null],
-      expiryDate: [null],
-      file: [''],
-      fileName: [''],
-    });
+          issueDate: [new Date()],
+          expiryDate: [new Date()],
+          file: [''],
+          fileName: ['']
+        })
   }
 
   addAttachment(): void {
-    this.employeeAttachments.push(this.newAttachment());
+    console.log('employeeAttachments', this.employeeAttachments);
+    let index = this.EmpForm.value.employeeAttachments.length;
+    if(this.EmpForm.value.employeeAttachments[index-1].file != "")
+    {
+      this.employeeAttachments.push(this.newAttachment());
+    }
   }
 
   deleteAttachment(i:number){
     const attachment = (this.EmpForm.get('employeeAttachments')as FormArray);
     attachment.removeAt(i);
-   // if(attachment.length===0) this.addAttachment();
   }
 
 
@@ -236,13 +235,16 @@ export class EmployeeComponent implements OnInit {
     }     
       const file = files[0];
       this.showFileName = file.name;
-      	
-    this.convertFile(file).subscribe(base64 => {
-	  this.base64Output = base64;
-    this.EmpForm.value.file = this.base64Output;
-    this.EmpForm.value.fileName = file.name;
-    });
-   
+      let issueDate = document.getElementById('issueDate'+recordIndex) as HTMLInputElement;
+      let expiryDate =  document.getElementById('expiryDate'+recordIndex) as HTMLInputElement;
+        
+  
+      this.EmpForm.value.employeeAttachments[recordIndex].fileName = file.name;
+      this.EmpForm.value.employeeAttachments[recordIndex].issueDate = new Date(issueDate.value);
+      this.EmpForm.value.employeeAttachments[recordIndex].expiryDate = new Date(expiryDate.value);
+      this.convertFile(file).subscribe(base64 => {
+      this.EmpForm.value.employeeAttachments[recordIndex].file = base64;
+      });
   }
 
   convertFile(file: File): Observable<string> {
@@ -252,83 +254,4 @@ export class EmployeeComponent implements OnInit {
     reader.onload = (event) => result.next(btoa(reader.result.toString()));
     return result;
   }
-
-
 }  
-
-
-
-
-
- //   this.fb.group({
-      //   issueDate: new FormControl(''),
-      //   expiryDate: new FormControl(''),
-      //   file: new FormControl(''),
-      //   fileName: new FormControl('')
-      // })]), 
-
-      // issueDate:this.fb.control(''),
-      // expiryDate:this.fb.control(''),
-      // file : this.fb.control(''),
-      // fileName : this.fb.control(''),
-
- //////////Add Files////////
-   
-       // this.employeeAttachments.push(new FormGroup({
-        //   issueDate: new FormControl( files[index].issueDate),
-        //   expiryDate: new FormControl( files[index].expiryDate),
-        //   file: new FormControl( reader.readAsDataURL(file)),
-        //   fileName: new FormControl( files[index].fileName)
-        // }));
-
-      //this.employeeAttachments.push({issueDate: this.EmpForm.get('issueDate'), expiryDate: this.EmpForm.get('expiryDate'),
-      // file :  this.EmpForm.get('file')} )
-      //this.addEmployeeAttachment();
-      // const formData = new FormData();
-      // formData.append('file', fileToUpload, fileToUpload.name);
-    //}
-    ////////////////////////////////
-
- // get employeeAttachmentsControl() {
-  //   return this.EmpForm.controls['employeeAttachments'].value as FormArray;
-  // }
-
-  //addEmployeeAttachment() {
-    //this.addAttachment();
-    // console.log('count|', this.employeeAttachmentsControl.length);
-    // this.employeeAttachmentsControl.push(new FormGroup({
-    //   issueDate: new FormControl(''),
-    //   expiryDate: new FormControl(''),
-    //   file: new FormControl(''),
-    //   fileName: new FormControl('')
-    // }));
-    // console.log('count||', this.employeeAttachmentsControl.length);
-
-    // issueDate:this.fb.control(''),
-      // expiryDate:this.fb.control(''),
-      // file : this.fb.control(''),
-      // fileName : this.fb.control(''),
-  //}
-
-    // this.fb.group({
-    //   documentNo: [null],
-    //   issueDate: [issueDate],
-    //   expiryDate: [expiryDate],
-    //   file: [ this.base64Output],
-    //   fileName: [file.name],
-    // });
-    //var y = this.employeeAttachments[recordIndex].get('issueDate');
-   // [recordIndex].FormGroup[recordIndex].controls("file").setValue(this.base64Output);
-    //console.log(y);
-    //this.EmpForm.value.issueDate = this.employeeAttachments[recordIndex].get('issueDate').value;
-    //this.EmpForm.value.expiryDate = this.employeeAttachments[recordIndex].get('expiryDate').value;
-
-      // this.EmpForm.controls["file"].setValue(this.base64Output);  
-      // this.EmpForm.controls["fileName"].setValue(file.fileName);  
-      //const reader = new FileReader();
-    //var x =  this.employeeAttachments[recordIndex].controls['issueDate'].value as Date;
-    //var y =  this.employeeAttachments[recordIndex].controls['expiryDate'].value as Date;
-//console.log(y);
-     // this.employeeAttachments[recordIndex].controls("fileName").setValue(file.fileName);
-   
-    //}

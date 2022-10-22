@@ -10,7 +10,7 @@ export interface EmployeeDto {
      departmentId: number;
      jobPositionId: number;
      Dependents : Array<Dependent>;
-     EmployeeAttachments: Array<EmployeeAttachment>;
+     EmployeeAttachments: Array<any>;
      SalaryDetails: Array<SalaryDetail>;
 }
 
